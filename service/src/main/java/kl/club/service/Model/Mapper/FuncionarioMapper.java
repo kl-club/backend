@@ -1,5 +1,6 @@
 package kl.club.service.Model.Mapper;
 
+import kl.club.service.Model.DTO.FuncionarioAtualizacaoRequestDTO;
 import kl.club.service.Model.DTO.FuncionarioRequestDTO;
 import kl.club.service.Model.DTO.FuncionarioResponseDTO;
 import kl.club.service.Model.Entity.Funcionario;
@@ -17,7 +18,8 @@ public final class FuncionarioMapper {
                 funcionario.getIdFuncionario(),
                 funcionario.getNome(),
                 funcionario.getEmail(),
-                funcionario.getNivel());
+                funcionario.getNivel(),
+                funcionario.getAtivo());
     }
 
     public static List<FuncionarioResponseDTO> toResponse(List<Funcionario> funcionarios) {
@@ -41,5 +43,11 @@ public final class FuncionarioMapper {
         funcionario.setNivel(dto.nivel());
 
         return funcionario;
+    }
+
+    public static void atualizar(Funcionario funcionario, FuncionarioAtualizacaoRequestDTO dto) {
+        funcionario.setNome(dto.nome());
+        funcionario.setEmail(dto.email());
+        funcionario.setNivel(dto.nivel());
     }
 }

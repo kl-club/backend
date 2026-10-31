@@ -4,10 +4,10 @@ import jakarta.validation.constraints.NotBlank;
 
 public record FuncionarioLoginRequestDTO(
 
-        @NotBlank
+        @NotBlank(message = "O email é obrigatório")
         String email,
 
-        @NotBlank
+        @NotBlank(message = "A senha é obrigatória")
         String senha
 ) {
 }

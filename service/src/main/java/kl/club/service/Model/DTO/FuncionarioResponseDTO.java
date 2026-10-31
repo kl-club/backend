@@ -7,6 +7,7 @@ public record FuncionarioResponseDTO(
         Integer idFuncionario,
         String nome,
         String email,
-        NivelFuncionario nivel
+        NivelFuncionario nivel,
+        Boolean ativo
 ) {
 }
