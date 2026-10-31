@@ -1,4 +1,7 @@
 package kl.club.service.model.dto;
 
-public class PedidoResponseDTO {
+public record PedidoResponseDTO (
+
+        String nome
+){
 }

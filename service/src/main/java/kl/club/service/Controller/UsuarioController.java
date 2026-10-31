@@ -24,4 +24,13 @@ public class UsuarioController {
         UsuarioResponseDTO usuarioCadastrado = usuarioService.cadastrar(requestDTO);
         return ResponseEntity.status(201).body(usuarioCadastrado);
     }
+
+    // Fazer um endpoint para após o cara inserir o valor no campo do frontend,
+    // o próprio frontend enviar uma chamada pra api verificar se já existe algum registro com aquele valor
+    //@GetMapping()
+    //public ResponseEntity<UsuarioResponseDTO> existsByCpfOuTelefone(
+    //      @RequestParam("cpf") String cpf,
+    //      @RequestParam("telefone") String telefone){
+    //
+    // }
 }
