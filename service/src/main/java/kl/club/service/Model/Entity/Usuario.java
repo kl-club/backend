@@ -1,4 +1,4 @@
-package kl.club.service.Model.Entity;
+package kl.club.service.model.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -29,7 +29,7 @@ public class Usuario {
     @Column(name = "cpf", nullable = false, unique = true, length = 11, columnDefinition = "CHAR(11)")
     private String cpf;
 
-    @Column(name = "telefone", nullable = false, length = 20)
+    @Column(name = "telefone", nullable = false, unique = true, length = 20)
     private String telefone;
 
     @Column(name = "conta_criada", nullable = false)

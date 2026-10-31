@@ -1,4 +1,4 @@
-package kl.club.service.Model.Entity;
+package kl.club.service.model.entity;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -14,9 +14,9 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
-import kl.club.service.Model.Enum.FormaPagamento;
-import kl.club.service.Model.Enum.Modalidade;
-import kl.club.service.Model.Enum.StatusPedido;
+import kl.club.service.model.enums.FormaPagamento;
+import kl.club.service.model.enums.Modalidade;
+import kl.club.service.model.enums.StatusPedido;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

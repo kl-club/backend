@@ -1,4 +1,4 @@
-package kl.club.service.Model.Entity;
+package kl.club.service.model.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -8,7 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import kl.club.service.Model.Enum.NivelFuncionario;
+import kl.club.service.model.enums.NivelFuncionario;
 
 import java.util.Objects;
 

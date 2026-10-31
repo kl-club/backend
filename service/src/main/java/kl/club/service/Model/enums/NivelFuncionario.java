@@ -1,4 +1,4 @@
-package kl.club.service.Model.Enum;
+package kl.club.service.model.enums;
 
 public enum NivelFuncionario {
     ADMINISTRADOR,

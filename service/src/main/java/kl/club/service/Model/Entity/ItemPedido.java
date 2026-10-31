@@ -1,4 +1,4 @@
-package kl.club.service.Model.Entity;
+package kl.club.service.model.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

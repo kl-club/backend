@@ -1,4 +1,4 @@
-package kl.club.service.Service;
+package kl.club.service.service;
 
 import org.springframework.stereotype.Service;
 

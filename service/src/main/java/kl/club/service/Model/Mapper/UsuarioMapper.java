@@ -1,32 +1,30 @@
-package kl.club.service.Model.Mapper;
+package kl.club.service.model.mapper;
 
-import kl.club.service.Model.DTO.UsuarioRequestDTO;
-import kl.club.service.Model.DTO.UsuarioResponseDTO;
-import kl.club.service.Model.Entity.Usuario;
+import kl.club.service.model.dto.UsuarioRequestDTO;
+import kl.club.service.model.dto.UsuarioResponseDTO;
+import kl.club.service.model.entity.Usuario;
 
-public class UsuarioMapper {
+public final class UsuarioMapper {
 
-    public static UsuarioResponseDTO toResponse(Usuario usuario){
-
-        UsuarioResponseDTO usuarioResponseDTO = new UsuarioResponseDTO();
-
-        usuarioResponseDTO.setIdUsuario(usuario.getIdUsuario());
-        usuarioResponseDTO.setCpf(usuario.getCpf());
-        usuarioResponseDTO.setNome(usuario.getNome());
-        usuarioResponseDTO.setTelefone(usuario.getTelefone());
-
-        return usuarioResponseDTO;
+    private UsuarioMapper() {
     }
 
-    public static Usuario toEntity(UsuarioRequestDTO dto){
+    public static UsuarioResponseDTO toResponse(Usuario usuario) {
+        return new UsuarioResponseDTO(
+                usuario.getIdUsuario(),
+                usuario.getNome(),
+                usuario.getCpf(),
+                usuario.getTelefone());
+    }
+
+    public static Usuario toEntity(UsuarioRequestDTO dto) {
 
         Usuario usuario = new Usuario();
 
-        usuario.setNome(dto.getNome());
-        usuario.setCpf(dto.getCpf());
-        usuario.setTelefone(dto.getTelefone());
+        usuario.setNome(dto.nome());
+        usuario.setCpf(dto.cpf());
+        usuario.setTelefone(dto.telefone());
 
         return usuario;
     }
-
 }
