@@ -14,9 +14,15 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler({UsuarioCpfExistenteException.class, UsuarioTelefoneExistenteException.class})
+    @ExceptionHandler({UsuarioCpfExistenteException.class, UsuarioTelefoneExistenteException.class,
+            FuncionarioEmailExistenteException.class})
     public ProblemDetail handleConflito(RuntimeException exception) {
         return ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, exception.getMessage());
+    }
+
+    @ExceptionHandler(CredenciaisInvalidasException.class)
+    public ProblemDetail handleCredenciaisInvalidas(CredenciaisInvalidasException exception) {
+        return ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, exception.getMessage());
     }
 
     @ExceptionHandler({UsuarioNaoEncontradoException.class, PedidoNaoEncontradoException.class})
@@ -38,6 +44,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ProblemDetail handleIntegridade(DataIntegrityViolationException exception) {
-        return ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, "CPF ou telefone já cadastrado");
+        return ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, "Dado já cadastrado");
     }
 }
