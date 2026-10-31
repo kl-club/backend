@@ -1,4 +1,4 @@
-package kl.club.service.controller;
+package kl.club.service.Controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

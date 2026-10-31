@@ -1,11 +1,11 @@
-package kl.club.service.controller;
+package kl.club.service.Controller;
 
 import jakarta.validation.Valid;
-import kl.club.service.model.dto.UsuarioAutenticacaoRequestDTO;
-import kl.club.service.model.dto.UsuarioRequestDTO;
-import kl.club.service.model.dto.UsuarioResponseDTO;
-import kl.club.service.repository.UsuarioRepository;
-import kl.club.service.service.UsuarioService;
+import kl.club.service.Model.DTO.UsuarioAutenticacaoRequestDTO;
+import kl.club.service.Model.DTO.UsuarioRequestDTO;
+import kl.club.service.Model.DTO.UsuarioResponseDTO;
+import kl.club.service.Repository.UsuarioRepository;
+import kl.club.service.Service.UsuarioService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,4 +1,4 @@
-package kl.club.service.model.enums;
+package kl.club.service.Model.enums;
 
 public enum Modalidade {
     LOCAL,

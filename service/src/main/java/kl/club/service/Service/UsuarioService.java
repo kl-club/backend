@@ -1,12 +1,12 @@
-package kl.club.service.service;
+package kl.club.service.Service;
 
-import kl.club.service.exception.UsuarioCpfExistenteException;
-import kl.club.service.exception.UsuarioTelefoneExistenteException;
-import kl.club.service.model.dto.UsuarioRequestDTO;
-import kl.club.service.model.dto.UsuarioResponseDTO;
-import kl.club.service.model.entity.Usuario;
-import kl.club.service.model.mapper.UsuarioMapper;
-import kl.club.service.repository.UsuarioRepository;
+import kl.club.service.Exception.UsuarioCpfExistenteException;
+import kl.club.service.Exception.UsuarioTelefoneExistenteException;
+import kl.club.service.Model.DTO.UsuarioRequestDTO;
+import kl.club.service.Model.DTO.UsuarioResponseDTO;
+import kl.club.service.Model.Entity.Usuario;
+import kl.club.service.Model.Mapper.UsuarioMapper;
+import kl.club.service.Repository.UsuarioRepository;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,11 +21,11 @@ public class UsuarioService {
     public UsuarioResponseDTO cadastrar(UsuarioRequestDTO requestDTO) {
 
         if (usuarioRepository.existsByCpf(requestDTO.cpf())) {
-            throw new UsuarioCpfExistenteException(requestDTO.cpf());
+            throw new UsuarioCpfExistenteException();
         }
 
         if (usuarioRepository.existsByTelefone(requestDTO.telefone())) {
-            throw new UsuarioTelefoneExistenteException(requestDTO.telefone());
+            throw new UsuarioTelefoneExistenteException();
         }
 
         Usuario usuarioCadastrar = UsuarioMapper.toEntity(requestDTO);

@@ -1,4 +1,4 @@
-package kl.club.service.model.dto;
+package kl.club.service.Model.DTO;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

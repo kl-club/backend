@@ -1,6 +1,6 @@
-package kl.club.service.repository;
+package kl.club.service.Repository;
 
-import kl.club.service.model.entity.Usuario;
+import kl.club.service.Model.Entity.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {

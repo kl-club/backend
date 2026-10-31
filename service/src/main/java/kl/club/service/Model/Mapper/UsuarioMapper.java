@@ -1,8 +1,8 @@
-package kl.club.service.model.mapper;
+package kl.club.service.Model.Mapper;
 
-import kl.club.service.model.dto.UsuarioRequestDTO;
-import kl.club.service.model.dto.UsuarioResponseDTO;
-import kl.club.service.model.entity.Usuario;
+import kl.club.service.Model.DTO.UsuarioRequestDTO;
+import kl.club.service.Model.DTO.UsuarioResponseDTO;
+import kl.club.service.Model.Entity.Usuario;
 
 public final class UsuarioMapper {
 

@@ -1,4 +1,4 @@
-package kl.club.service.model.mapper;
+package kl.club.service.Model.Mapper;
 
 public class PedidoMapper {
 }
