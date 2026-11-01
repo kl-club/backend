@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -217,5 +218,55 @@ public class UsuarioService {
         return pedidos.stream()
                 .map(PedidoMapper::toResponseDetalhado)
                 .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public UsuarioResumoResponseDTO buscarResumo(Integer id) {
+
+        Optional<Usuario> usuarioEncontrado =
+                usuarioRepository.findById(id);
+
+        if (usuarioEncontrado.isEmpty()) {
+            throw new UsuarioNaoEncontradoException("");
+        }
+
+        Usuario usuario = usuarioEncontrado.get();
+
+        long quantidadePedidos =
+                pedidoRepository.countByUsuario_IdUsuario(id);
+
+        Long pontosAcumulados =
+                pedidoRepository.somarPontosPorUsuario(
+                        id,
+                        StatusPedido.CONCLUIDO
+                );
+
+        BigDecimal totalGasto =
+                pedidoRepository.somarValorGastoPorUsuario(
+                        id,
+                        StatusPedido.CONCLUIDO
+                );
+
+        if (totalGasto == null) {
+            totalGasto = BigDecimal.ZERO;
+        }
+
+        Optional<Pedido> ultimoPedido =
+                pedidoRepository.findFirstByUsuario_IdUsuarioOrderByDataHoraDescIdPedidoDesc(id);
+
+        Integer ultimoPedidoId = null;
+
+        if (ultimoPedido.isPresent()) {
+            ultimoPedidoId = ultimoPedido.get().getIdPedido();
+        }
+
+        return new UsuarioResumoResponseDTO(
+                usuario.getIdUsuario(),
+                usuario.getNome(),
+                quantidadePedidos,
+                totalGasto,
+                pontosAcumulados,
+                ultimoPedidoId
+        );
     }
 }

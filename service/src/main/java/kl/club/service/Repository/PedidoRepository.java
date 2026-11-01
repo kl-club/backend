@@ -6,7 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 public interface PedidoRepository extends JpaRepository<Pedido, Integer> {
 
@@ -44,5 +46,22 @@ public interface PedidoRepository extends JpaRepository<Pedido, Integer> {
         """)
     List<Pedido> buscarPedidosPorUsuario(
             @Param("idUsuario") Integer idUsuario
+    );
+
+    long countByUsuario_IdUsuario(Integer idUsuario);
+
+    @Query("""
+        SELECT SUM(p.valorTotal)
+        FROM Pedido p
+        WHERE p.usuario.idUsuario = :idUsuario
+        AND p.statusPedido = :status
+        """)
+    BigDecimal somarValorGastoPorUsuario(
+            @Param("idUsuario") Integer idUsuario,
+            @Param("status") StatusPedido status
+    );
+
+    Optional<Pedido> findFirstByUsuario_IdUsuarioOrderByDataHoraDescIdPedidoDesc(
+            Integer idUsuario
     );
 }

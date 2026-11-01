@@ -100,4 +100,15 @@ public class UsuarioController {
 
         return ResponseEntity.status(200).body(pedidos);
     }
+
+    @GetMapping("/{id}/resumo")
+    public ResponseEntity<UsuarioResumoResponseDTO> buscarResumo(
+            @PathVariable Integer id
+    ) {
+
+        UsuarioResumoResponseDTO resumo =
+                usuarioService.buscarResumo(id);
+
+        return ResponseEntity.ok(resumo);
+    }
 }
