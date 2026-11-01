@@ -25,7 +25,7 @@ import java.util.StringJoiner;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler({UsuarioCpfExistenteException.class, UsuarioTelefoneExistenteException.class,
-            FuncionarioEmailExistenteException.class})
+            FuncionarioEmailExistenteException.class, CategoriaNomeExistenteException.class})
     public ProblemDetail handleConflito(RuntimeException exception) {
         return ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, exception.getMessage());
     }

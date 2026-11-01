@@ -2,7 +2,7 @@
 
 API REST do KL Club, projeto do 3º semestre de ADS. Atende os frontends de cadastro de clientes, pedidos e dashboard.
 
-O sistema cobre usuários, funcionários, produtos, categorias e pedidos com pontuação. Por enquanto, estão implementados o cadastro de usuários e a rota de funcionários.
+O sistema cobre usuários, funcionários, produtos, categorias e pedidos com pontuação. Por enquanto, estão implementados o cadastro de usuários, a rota de funcionários e a listagem e o cadastro de categorias.
 
 ## Tecnologias
 
@@ -59,6 +59,8 @@ A API sobe em `http://localhost:8080`, e o Swagger fica em `http://localhost:808
 | `DELETE` | `/funcionarios/{id}` | Desativa um funcionário, sem apagar o registro |
 | `PATCH` | `/funcionarios/{id}/senha` | Troca a senha, exigindo a senha atual |
 | `POST` | `/funcionarios/login` | Valida email e senha |
+| `GET` | `/categorias` | Lista as categorias |
+| `POST` | `/categorias` | Cadastra uma categoria |
 
 ### Erros
 
