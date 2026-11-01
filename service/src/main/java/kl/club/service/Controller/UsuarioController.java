@@ -77,4 +77,16 @@ public class UsuarioController {
 
         return ResponseEntity.status(200).body(usuarioAtualizado);
     }
+
+
+    @GetMapping("/{id}/pontos")
+    public ResponseEntity<UsuarioPontosResponseDTO> consultarPontos(
+            @PathVariable Integer id
+    ) {
+
+        UsuarioPontosResponseDTO response =
+                usuarioService.consultarPontos(id);
+
+        return ResponseEntity.status(200).body(response);
+    }
 }

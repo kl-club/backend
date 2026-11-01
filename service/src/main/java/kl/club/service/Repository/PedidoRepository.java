@@ -1,6 +1,7 @@
 package kl.club.service.Repository;
 
 import kl.club.service.Model.Entity.Pedido;
+import kl.club.service.Model.enums.StatusPedido;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -18,5 +19,17 @@ public interface PedidoRepository extends JpaRepository<Pedido, Integer> {
         """)
     List<Pedido> buscarPedidosComItens(
             @Param("ids") List<Integer> ids
+    );
+
+
+    @Query("""
+        SELECT COALESCE(SUM(p.pontosGerados), 0L)
+        FROM Pedido p
+        WHERE p.usuario.idUsuario = :idUsuario
+        AND p.statusPedido = :status
+        """)
+    Long somarPontosPorUsuario(
+            @Param("idUsuario") Integer idUsuario,
+            @Param("status") StatusPedido status
     );
 }

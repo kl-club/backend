@@ -1,5 +1,6 @@
 package kl.club.service.Service;
 
+import kl.club.service.Model.enums.StatusPedido;
 import org.springframework.transaction.annotation.Transactional;
 import kl.club.service.Exception.UsuarioCpfExistenteException;
 import kl.club.service.Exception.UsuarioNaoEncontradoException;
@@ -175,5 +176,29 @@ public class UsuarioService {
         Usuario usuarioAtualizado = usuarioRepository.save(usuario);
 
         return UsuarioMapper.toResponse(usuarioAtualizado);
+    }
+
+    @Transactional(readOnly = true)
+    public UsuarioPontosResponseDTO consultarPontos(Integer id) {
+
+        Optional<Usuario> usuarioEncontrado =
+                usuarioRepository.findById(id);
+
+        if (usuarioEncontrado.isEmpty()) {
+            throw new UsuarioNaoEncontradoException("");
+        }
+
+        Usuario usuario = usuarioEncontrado.get();
+
+        Long pontos = pedidoRepository.somarPontosPorUsuario(
+                id,
+                StatusPedido.CONCLUIDO
+        );
+
+        return new UsuarioPontosResponseDTO(
+                usuario.getIdUsuario(),
+                usuario.getNome(),
+                pontos
+        );
     }
 }
