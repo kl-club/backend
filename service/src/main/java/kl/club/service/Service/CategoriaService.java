@@ -36,13 +36,30 @@ public class CategoriaService {
         return CategoriaMapper.toResponse(categoriaRepository.save(categoriaCadastrar));
     }
 
+    public CategoriaResponseDTO atualizar(Integer id, CategoriaRequestDTO requestDTO) {
+
+        Categoria categoria = buscarPorId(id);
+
+        if (categoriaRepository.existsByNomeAndIdCategoriaNot(requestDTO.nome(), id)) {
+            throw new CategoriaNomeExistenteException();
+        }
+
+        categoria.setNome(requestDTO.nome());
+
+        return CategoriaMapper.toResponse(categoriaRepository.save(categoria));
+    }
+
     public CategoriaResponseDTO alterarAtivo(Integer id, CategoriaAtivoRequestDTO requestDTO) {
 
-        Categoria categoria = categoriaRepository.findById(id)
-                .orElseThrow(CategoriaNaoEncontradaException::new);
+        Categoria categoria = buscarPorId(id);
 
         categoria.setAtivo(requestDTO.ativo());
 
         return CategoriaMapper.toResponse(categoriaRepository.save(categoria));
+    }
+
+    private Categoria buscarPorId(Integer id) {
+        return categoriaRepository.findById(id)
+                .orElseThrow(CategoriaNaoEncontradaException::new);
     }
 }

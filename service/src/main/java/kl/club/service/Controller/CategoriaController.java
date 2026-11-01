@@ -31,6 +31,13 @@ public class CategoriaController {
         return ResponseEntity.status(201).body(categoriaCadastrada);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<CategoriaResponseDTO> atualizarCategoria(
+            @PathVariable Integer id,
+            @RequestBody @Valid CategoriaRequestDTO requestDTO) {
+        return ResponseEntity.status(200).body(categoriaService.atualizar(id, requestDTO));
+    }
+
     @PatchMapping("/{id}/ativo")
     public ResponseEntity<CategoriaResponseDTO> alterarAtivo(
             @PathVariable Integer id,

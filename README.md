@@ -61,6 +61,7 @@ A API sobe em `http://localhost:8080`, e o Swagger fica em `http://localhost:808
 | `POST` | `/funcionarios/login` | Valida email e senha |
 | `GET` | `/categorias` | Lista as categorias |
 | `POST` | `/categorias` | Cadastra uma categoria |
+| `PUT` | `/categorias/{id}` | Atualiza o nome de uma categoria |
 | `PATCH` | `/categorias/{id}/ativo` | Ativa ou desativa uma categoria |
 
 ### Erros
