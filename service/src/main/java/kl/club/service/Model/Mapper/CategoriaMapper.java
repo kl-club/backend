@@ -15,7 +15,8 @@ public final class CategoriaMapper {
     public static CategoriaResponseDTO toResponse(Categoria categoria) {
         return new CategoriaResponseDTO(
                 categoria.getIdCategoria(),
-                categoria.getNome());
+                categoria.getNome(),
+                categoria.getAtivo());
     }
 
     public static List<CategoriaResponseDTO> toResponse(List<Categoria> categorias) {

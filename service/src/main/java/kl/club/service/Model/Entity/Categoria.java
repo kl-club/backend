@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 
 import java.util.ArrayList;
@@ -24,15 +25,26 @@ public class Categoria {
     @Column(name = "nome", nullable = false, unique = true, length = 100)
     private String nome;
 
+    @Column(name = "ativo", nullable = false, columnDefinition = "TINYINT")
+    private Boolean ativo;
+
     @OneToMany(mappedBy = "categoria")
     private List<Produto> produtos = new ArrayList<>();
 
     public Categoria() {
     }
 
-    public Categoria(Integer idCategoria, String nome) {
+    public Categoria(Integer idCategoria, String nome, Boolean ativo) {
         this.idCategoria = idCategoria;
         this.nome = nome;
+        this.ativo = ativo;
+    }
+
+    @PrePersist
+    void prePersist() {
+        if (ativo == null) {
+            ativo = true;
+        }
     }
 
     public Integer getIdCategoria() {
@@ -49,6 +61,14 @@ public class Categoria {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public Boolean getAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(Boolean ativo) {
+        this.ativo = ativo;
     }
 
     public List<Produto> getProdutos() {
@@ -73,6 +93,6 @@ public class Categoria {
 
     @Override
     public String toString() {
-        return "Categoria{idCategoria=" + idCategoria + ", nome='" + nome + "'}";
+        return "Categoria{idCategoria=" + idCategoria + ", nome='" + nome + "', ativo=" + ativo + "}";
     }
 }

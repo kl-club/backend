@@ -1,6 +1,7 @@
 package kl.club.service.Controller;
 
 import jakarta.validation.Valid;
+import kl.club.service.Model.DTO.CategoriaAtivoRequestDTO;
 import kl.club.service.Model.DTO.CategoriaRequestDTO;
 import kl.club.service.Model.DTO.CategoriaResponseDTO;
 import kl.club.service.Service.CategoriaService;
@@ -28,5 +29,12 @@ public class CategoriaController {
     public ResponseEntity<CategoriaResponseDTO> cadastrarCategoria(@RequestBody @Valid CategoriaRequestDTO requestDTO) {
         CategoriaResponseDTO categoriaCadastrada = categoriaService.cadastrar(requestDTO);
         return ResponseEntity.status(201).body(categoriaCadastrada);
+    }
+
+    @PatchMapping("/{id}/ativo")
+    public ResponseEntity<CategoriaResponseDTO> alterarAtivo(
+            @PathVariable Integer id,
+            @RequestBody @Valid CategoriaAtivoRequestDTO requestDTO) {
+        return ResponseEntity.status(200).body(categoriaService.alterarAtivo(id, requestDTO));
     }
 }

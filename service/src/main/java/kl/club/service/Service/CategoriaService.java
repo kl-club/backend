@@ -1,6 +1,8 @@
 package kl.club.service.Service;
 
+import kl.club.service.Exception.CategoriaNaoEncontradaException;
 import kl.club.service.Exception.CategoriaNomeExistenteException;
+import kl.club.service.Model.DTO.CategoriaAtivoRequestDTO;
 import kl.club.service.Model.DTO.CategoriaRequestDTO;
 import kl.club.service.Model.DTO.CategoriaResponseDTO;
 import kl.club.service.Model.Entity.Categoria;
@@ -32,5 +34,15 @@ public class CategoriaService {
         Categoria categoriaCadastrar = CategoriaMapper.toEntity(requestDTO);
 
         return CategoriaMapper.toResponse(categoriaRepository.save(categoriaCadastrar));
+    }
+
+    public CategoriaResponseDTO alterarAtivo(Integer id, CategoriaAtivoRequestDTO requestDTO) {
+
+        Categoria categoria = categoriaRepository.findById(id)
+                .orElseThrow(CategoriaNaoEncontradaException::new);
+
+        categoria.setAtivo(requestDTO.ativo());
+
+        return CategoriaMapper.toResponse(categoriaRepository.save(categoria));
     }
 }

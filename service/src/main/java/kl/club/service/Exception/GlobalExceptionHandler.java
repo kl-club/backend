@@ -36,7 +36,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler({UsuarioNaoEncontradoException.class, PedidoNaoEncontradoException.class,
-            FuncionarioNaoEncontradoException.class})
+            FuncionarioNaoEncontradoException.class, CategoriaNaoEncontradaException.class})
     public ProblemDetail handleNaoEncontrado(RuntimeException exception) {
         return ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, exception.getMessage());
     }
