@@ -25,7 +25,7 @@ import java.util.StringJoiner;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler({UsuarioCpfExistenteException.class, UsuarioTelefoneExistenteException.class,
-            FuncionarioEmailExistenteException.class})
+            FuncionarioEmailExistenteException.class, CategoriaNomeExistenteException.class})
     public ProblemDetail handleConflito(RuntimeException exception) {
         return ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, exception.getMessage());
     }
@@ -36,7 +36,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler({UsuarioNaoEncontradoException.class, PedidoNaoEncontradoException.class,
-            FuncionarioNaoEncontradoException.class})
+            FuncionarioNaoEncontradoException.class, CategoriaNaoEncontradaException.class})
     public ProblemDetail handleNaoEncontrado(RuntimeException exception) {
         return ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, exception.getMessage());
     }
