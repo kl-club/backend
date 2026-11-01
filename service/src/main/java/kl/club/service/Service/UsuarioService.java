@@ -130,4 +130,50 @@ public class UsuarioService {
 
         return UsuarioMapper.toResponseComPedidos(usuario);
     }
+
+    @Transactional
+    public UsuarioResponseDTO atualizar(
+            Integer id,
+            UsuarioAtualizacaoRequestDTO dto
+    ) {
+
+        Optional<Usuario> usuarioEncontrado =
+                usuarioRepository.findById(id);
+
+        if (usuarioEncontrado.isEmpty()) {
+            throw new UsuarioNaoEncontradoException("");
+        }
+
+        Usuario usuario = usuarioEncontrado.get();
+
+        if (dto.nome() == null && dto.telefone() == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Informe pelo menos um campo para atualização"
+            );
+        }
+
+        if (dto.nome() != null) {
+            usuario.setNome(dto.nome());
+        }
+
+        if (dto.telefone() != null) {
+
+            boolean telefoneExistente =
+                    usuarioRepository.existsByTelefoneAndIdUsuarioNot(
+                            dto.telefone(),
+                            id
+                    );
+
+            if (telefoneExistente) {
+                throw new UsuarioTelefoneExistenteException();
+            }
+
+            usuario.setTelefone(dto.telefone());
+        }
+
+        Usuario usuarioAtualizado = usuarioRepository.save(usuario);
+
+        return UsuarioMapper.toResponse(usuarioAtualizado);
+    }
 }

@@ -29,4 +29,10 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
         WHERE u.idUsuario = :id
         """)
     Optional<Usuario> buscarPorIdComPedidos(@Param("id") Integer id);
+
+//Procura se existe algum usuario com telefone cujo id seja diferente do pesquisado
+    boolean existsByTelefoneAndIdUsuarioNot(
+            String telefone,
+            Integer idUsuario
+    );
 }
