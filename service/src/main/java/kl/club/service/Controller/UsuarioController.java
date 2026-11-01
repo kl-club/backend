@@ -1,14 +1,12 @@
 package kl.club.service.Controller;
 
 import jakarta.validation.Valid;
-import kl.club.service.Model.DTO.UsuarioAutenticacaoRequestDTO;
-import kl.club.service.Model.DTO.UsuarioRequestDTO;
-import kl.club.service.Model.DTO.UsuarioResponseDTO;
-import kl.club.service.Model.DTO.UsuarioVerificacaoResponseDTO;
-import kl.club.service.Repository.UsuarioRepository;
+import kl.club.service.Model.DTO.*;
 import kl.club.service.Service.UsuarioService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -48,4 +46,23 @@ public class UsuarioController {
     }
 
 
+    @GetMapping
+    public ResponseEntity<List<UsuarioPedidosResponseDTO>> listarTodosComPedidos() {
+
+        List<UsuarioPedidosResponseDTO> usuarios =
+                usuarioService.listarTodosComPedidos();
+
+        return ResponseEntity.ok(usuarios);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<UsuarioPedidosResponseDTO> buscarPorId(
+            @PathVariable Integer id
+    ) {
+
+        UsuarioPedidosResponseDTO usuario =
+                usuarioService.buscarPorId(id);
+
+        return ResponseEntity.ok(usuario);
+    }
 }

@@ -1,12 +1,11 @@
 package kl.club.service.Service;
 
+import org.springframework.transaction.annotation.Transactional;
 import kl.club.service.Exception.UsuarioCpfExistenteException;
 import kl.club.service.Exception.UsuarioNaoEncontradoException;
 import kl.club.service.Exception.UsuarioTelefoneExistenteException;
-import kl.club.service.Model.DTO.UsuarioAutenticacaoRequestDTO;
-import kl.club.service.Model.DTO.UsuarioRequestDTO;
-import kl.club.service.Model.DTO.UsuarioResponseDTO;
-import kl.club.service.Model.DTO.UsuarioVerificacaoResponseDTO;
+import kl.club.service.Model.DTO.*;
+import kl.club.service.Model.Entity.Pedido;
 import kl.club.service.Model.Entity.Usuario;
 import kl.club.service.Model.Mapper.UsuarioMapper;
 import kl.club.service.Repository.PedidoRepository;
@@ -15,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -85,5 +85,49 @@ public class UsuarioService {
         }
 
         return UsuarioMapper.toResponse(usuario.get());
+    }
+
+    @Transactional(readOnly = true)
+    public List<UsuarioPedidosResponseDTO> listarTodosComPedidos() {
+
+        List<Usuario> usuarios =
+                usuarioRepository.buscarTodosComPedidos();
+
+        List<Integer> idsPedidos = usuarios.stream()
+                .flatMap(usuario -> usuario.getPedidos().stream())
+                .map(Pedido::getIdPedido)
+                .toList();
+
+        if (!idsPedidos.isEmpty()) {
+            pedidoRepository.buscarPedidosComItens(idsPedidos);
+        }
+
+        return usuarios.stream()
+                .map(UsuarioMapper::toResponseComPedidos)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public UsuarioPedidosResponseDTO buscarPorId(Integer id) {
+
+        Optional<Usuario> usuarioEncontrado =
+                usuarioRepository.buscarPorIdComPedidos(id);
+
+        if (usuarioEncontrado.isEmpty()) {
+            throw new UsuarioNaoEncontradoException("");
+        }
+
+        Usuario usuario = usuarioEncontrado.get();
+
+        List<Integer> idsPedidos = usuario.getPedidos()
+                .stream()
+                .map(Pedido::getIdPedido)
+                .toList();
+
+        if (!idsPedidos.isEmpty()) {
+            pedidoRepository.buscarPedidosComItens(idsPedidos);
+        }
+
+        return UsuarioMapper.toResponseComPedidos(usuario);
     }
 }
