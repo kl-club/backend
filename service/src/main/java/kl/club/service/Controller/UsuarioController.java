@@ -89,4 +89,15 @@ public class UsuarioController {
 
         return ResponseEntity.status(200).body(response);
     }
+
+    @GetMapping("/{id}/pedidos")
+    public ResponseEntity<List<PedidoDetalhadoResponseDTO>> listarPedidosPorUsuario(
+            @PathVariable Integer id
+    ) {
+
+        List<PedidoDetalhadoResponseDTO> pedidos =
+                usuarioService.listarPedidosPorUsuario(id);
+
+        return ResponseEntity.status(200).body(pedidos);
+    }
 }

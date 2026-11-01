@@ -1,5 +1,6 @@
 package kl.club.service.Service;
 
+import kl.club.service.Model.Mapper.PedidoMapper;
 import kl.club.service.Model.enums.StatusPedido;
 import org.springframework.transaction.annotation.Transactional;
 import kl.club.service.Exception.UsuarioCpfExistenteException;
@@ -200,5 +201,21 @@ public class UsuarioService {
                 usuario.getNome(),
                 pontos
         );
+    }
+
+    @Transactional(readOnly = true)
+    public List<PedidoDetalhadoResponseDTO> listarPedidosPorUsuario(Integer id) {
+
+        boolean usuarioExiste = usuarioRepository.existsById(id);
+
+        if (!usuarioExiste) {
+            throw new UsuarioNaoEncontradoException("");
+        }
+
+        List<Pedido> pedidos = pedidoRepository.buscarPedidosPorUsuario(id);
+
+        return pedidos.stream()
+                .map(PedidoMapper::toResponseDetalhado)
+                .toList();
     }
 }

@@ -32,4 +32,17 @@ public interface PedidoRepository extends JpaRepository<Pedido, Integer> {
             @Param("idUsuario") Integer idUsuario,
             @Param("status") StatusPedido status
     );
+
+    @Query("""
+        SELECT DISTINCT p
+        FROM Pedido p
+        LEFT JOIN FETCH p.itens i
+        LEFT JOIN FETCH i.produto produto
+        LEFT JOIN FETCH produto.categoria
+        WHERE p.usuario.idUsuario = :idUsuario
+        ORDER BY p.dataHora DESC
+        """)
+    List<Pedido> buscarPedidosPorUsuario(
+            @Param("idUsuario") Integer idUsuario
+    );
 }
