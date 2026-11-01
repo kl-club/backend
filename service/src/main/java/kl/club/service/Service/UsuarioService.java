@@ -269,4 +269,34 @@ public class UsuarioService {
                 ultimoPedidoId
         );
     }
+
+    @Transactional(readOnly = true)
+    public PedidoDetalhadoResponseDTO buscarPedidoPorUsuario(
+            Integer usuarioId,
+            Integer pedidoId
+    ) {
+
+        boolean usuarioExiste = usuarioRepository.existsById(usuarioId);
+
+        if (!usuarioExiste) {
+            throw new UsuarioNaoEncontradoException("");
+        }
+
+        Optional<Pedido> pedidoEncontrado =
+                pedidoRepository.buscarPedidoPorUsuario(
+                        usuarioId,
+                        pedidoId
+                );
+
+        if (pedidoEncontrado.isEmpty()) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "Pedido não encontrado para este usuário"
+            );
+        }
+
+        Pedido pedido = pedidoEncontrado.get();
+
+        return PedidoMapper.toResponseDetalhado(pedido);
+    }
 }

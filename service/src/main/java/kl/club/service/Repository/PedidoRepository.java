@@ -64,4 +64,19 @@ public interface PedidoRepository extends JpaRepository<Pedido, Integer> {
     Optional<Pedido> findFirstByUsuario_IdUsuarioOrderByDataHoraDescIdPedidoDesc(
             Integer idUsuario
     );
+
+    @Query("""
+        SELECT DISTINCT p
+        FROM Pedido p
+        LEFT JOIN FETCH p.itens i
+        LEFT JOIN FETCH i.produto produto
+        LEFT JOIN FETCH produto.categoria
+        WHERE p.idPedido = :pedidoId
+        AND p.usuario.idUsuario = :usuarioId
+        """)
+    Optional<Pedido> buscarPedidoPorUsuario(
+            @Param("usuarioId") Integer usuarioId,
+            @Param("pedidoId") Integer pedidoId
+    );
 }
+

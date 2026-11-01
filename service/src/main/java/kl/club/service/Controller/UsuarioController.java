@@ -111,4 +111,16 @@ public class UsuarioController {
 
         return ResponseEntity.ok(resumo);
     }
+
+    @GetMapping("/{id}/pedidos/{pedidoId}")
+    public ResponseEntity<PedidoDetalhadoResponseDTO> buscarPedidoPorUsuario(
+            @PathVariable Integer id,
+            @PathVariable Integer pedidoId
+    ) {
+
+        PedidoDetalhadoResponseDTO pedido =
+                usuarioService.buscarPedidoPorUsuario(id, pedidoId);
+
+        return ResponseEntity.status(200).body(pedido);
+    }
 }
