@@ -28,11 +28,11 @@ public interface PedidoRepository extends JpaRepository<Pedido, Integer> {
         SELECT COALESCE(SUM(p.pontosGerados), 0L)
         FROM Pedido p
         WHERE p.usuario.idUsuario = :idUsuario
-        AND p.statusPedido = :status
+        AND p.statusPedido NOT IN :statusExcluidos
         """)
     Long somarPontosPorUsuario(
             @Param("idUsuario") Integer idUsuario,
-            @Param("status") StatusPedido status
+            @Param("statusExcluidos") List<StatusPedido> statusExcluidos
     );
 
     @Query("""
