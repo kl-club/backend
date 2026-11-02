@@ -194,7 +194,10 @@ public class UsuarioService {
 
         Long pontos = pedidoRepository.somarPontosPorUsuario(
                 id,
-                StatusPedido.CONCLUIDO
+                List.of(
+                        StatusPedido.CANCELADO,
+                        StatusPedido.PENDENTE
+                )
         );
 
         return new UsuarioPontosResponseDTO(
@@ -238,7 +241,10 @@ public class UsuarioService {
         Long pontosAcumulados =
                 pedidoRepository.somarPontosPorUsuario(
                         id,
-                        StatusPedido.CONCLUIDO
+                        List.of(
+                                StatusPedido.CANCELADO,
+                                StatusPedido.PENDENTE
+                        )
                 );
 
         BigDecimal totalGasto =
