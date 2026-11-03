@@ -1,7 +1,7 @@
 package kl.club.service.Exception;
 
-public class FuncionarioEmailExistenteException extends RuntimeException {
+public class FuncionarioEmailExistenteException extends NegocioException {
     public FuncionarioEmailExistenteException() {
-        super("Email já cadastrado!");
+        super("FUNCIONARIO_EMAIL_EXISTENTE", "Email já cadastrado!");
     }
 }

@@ -11,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import kl.club.service.Model.enums.FormaPagamento;
@@ -60,7 +61,9 @@ public class Pedido {
     @JoinColumn(name = "fk_usuario")
     private Usuario usuario;
 
+    // Itens sempre na ordem em que foram informados na criação
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("idItemPedido ASC")
     private List<ItemPedido> itens = new ArrayList<>();
 
     public Pedido() {
@@ -165,6 +168,15 @@ public class Pedido {
 
     public void setItens(List<ItemPedido> itens) {
         this.itens = itens;
+    }
+
+    /**
+     * Acrescenta um item ao pedido, mantendo os dois lados da relação iguais antes do save.
+     * Usado só na criação: os itens não mudam depois que o pedido é salvo.
+     */
+    public void adicionarItem(ItemPedido item) {
+        item.setPedido(this);
+        itens.add(item);
     }
 
     @Override

@@ -98,6 +98,7 @@ public class CategoriaController {
                                               "status": 400,
                                               "detail": "Dados inválidos",
                                               "instance": "/categorias",
+                                              "codigo": "DADOS_INVALIDOS",
                                               "erros": {
                                                 "nome": "O nome é obrigatório"
                                               }
@@ -121,7 +122,8 @@ public class CategoriaController {
                                               "title": "Conflict",
                                               "status": 409,
                                               "detail": "Categoria já cadastrada!",
-                                              "instance": "/categorias"
+                                              "instance": "/categorias",
+                                              "codigo": "CATEGORIA_NOME_EXISTENTE"
                                             }
                                             """
                             )
@@ -172,6 +174,7 @@ public class CategoriaController {
                                               "status": 400,
                                               "detail": "Dados inválidos",
                                               "instance": "/categorias/1",
+                                              "codigo": "DADOS_INVALIDOS",
                                               "erros": {
                                                 "nome": "O nome é obrigatório"
                                               }
@@ -195,7 +198,8 @@ public class CategoriaController {
                                               "title": "Not Found",
                                               "status": 404,
                                               "detail": "Categoria não encontrada",
-                                              "instance": "/categorias/999"
+                                              "instance": "/categorias/999",
+                                              "codigo": "CATEGORIA_NAO_ENCONTRADA"
                                             }
                                             """
                             )
@@ -216,7 +220,8 @@ public class CategoriaController {
                                               "title": "Conflict",
                                               "status": 409,
                                               "detail": "Categoria já cadastrada!",
-                                              "instance": "/categorias/1"
+                                              "instance": "/categorias/1",
+                                              "codigo": "CATEGORIA_NOME_EXISTENTE"
                                             }
                                             """
                             )
@@ -270,6 +275,7 @@ public class CategoriaController {
                                               "status": 400,
                                               "detail": "Dados inválidos",
                                               "instance": "/categorias/1/ativo",
+                                              "codigo": "DADOS_INVALIDOS",
                                               "erros": {
                                                 "ativo": "O campo ativo é obrigatório"
                                               }
@@ -293,7 +299,8 @@ public class CategoriaController {
                                               "title": "Not Found",
                                               "status": 404,
                                               "detail": "Categoria não encontrada",
-                                              "instance": "/categorias/999/ativo"
+                                              "instance": "/categorias/999/ativo",
+                                              "codigo": "CATEGORIA_NAO_ENCONTRADA"
                                             }
                                             """
                             )

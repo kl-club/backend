@@ -1,7 +1,7 @@
 package kl.club.service.Exception;
 
-public class UsuarioCpfExistenteException extends RuntimeException {
+public class UsuarioCpfExistenteException extends NegocioException {
     public UsuarioCpfExistenteException() {
-        super("CPF já cadastrado!");
+        super("USUARIO_CPF_EXISTENTE", "CPF já cadastrado!");
     }
 }
