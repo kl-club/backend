@@ -1,7 +1,11 @@
 package kl.club.service.Exception;
 
-public class UsuarioNaoEncontradoException extends RuntimeException {
+public class UsuarioNaoEncontradoException extends NegocioException {
+    public UsuarioNaoEncontradoException() {
+        super("USUARIO_NAO_ENCONTRADO", "Usuário não encontrado");
+    }
+
     public UsuarioNaoEncontradoException(String message) {
-        super(message);
+        super("USUARIO_NAO_ENCONTRADO", message);
     }
 }

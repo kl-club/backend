@@ -1,7 +1,7 @@
 package kl.club.service.Exception;
 
-public class ProdutoNomeExistenteException extends RuntimeException {
+public class ProdutoNomeExistenteException extends NegocioException {
     public ProdutoNomeExistenteException() {
-        super("Produto já cadastrado!");
+        super("PRODUTO_NOME_EXISTENTE", "Produto já cadastrado!");
     }
 }

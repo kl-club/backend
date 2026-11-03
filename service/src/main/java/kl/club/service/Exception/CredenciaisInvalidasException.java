@@ -1,7 +1,7 @@
 package kl.club.service.Exception;
 
-public class CredenciaisInvalidasException extends RuntimeException {
+public class CredenciaisInvalidasException extends NegocioException {
     public CredenciaisInvalidasException() {
-        super("Email ou senha inválidos");
+        super("CREDENCIAIS_INVALIDAS", "Email ou senha inválidos");
     }
 }

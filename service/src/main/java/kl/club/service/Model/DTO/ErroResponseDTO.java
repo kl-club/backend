@@ -28,6 +28,12 @@ public record ErroResponseDTO(
         String instance,
 
         @Schema(
+                description = "Código fixo do erro, para o front distinguir os casos sem depender do texto de detail.",
+                example = "CATEGORIA_NAO_ENCONTRADA"
+        )
+        String codigo,
+
+        @Schema(
                 description = "Erros específicos dos campos, quando houver.",
                 requiredMode = Schema.RequiredMode.NOT_REQUIRED
         )

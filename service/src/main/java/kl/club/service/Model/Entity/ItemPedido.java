@@ -11,6 +11,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Objects;
 
 @Entity
@@ -26,7 +27,7 @@ public class ItemPedido {
     @JoinColumn(name = "fk_pedido", nullable = false)
     private Pedido pedido;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_produto", nullable = false)
     private Produto produto;
 
@@ -50,6 +51,16 @@ public class ItemPedido {
         this.quantidade = quantidade;
         this.precoUnitario = precoUnitario;
         this.pontosUnitario = pontosUnitario;
+    }
+
+    /** Valor do item: preço unitário × quantidade, com 2 casas. Não é gravado em coluna. */
+    public BigDecimal calcularValorTotal() {
+        return precoUnitario.multiply(BigDecimal.valueOf(quantidade)).setScale(2, RoundingMode.HALF_UP);
+    }
+
+    /** Pontos do item: pontos unitários × quantidade. Não é gravado em coluna. */
+    public int calcularPontos() {
+        return pontosUnitario * quantidade;
     }
 
     public Integer getIdItemPedido() {

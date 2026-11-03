@@ -1,7 +1,7 @@
 package kl.club.service.Exception;
 
-public class FuncionarioNaoEncontradoException extends RuntimeException {
+public class FuncionarioNaoEncontradoException extends NegocioException {
     public FuncionarioNaoEncontradoException() {
-        super("Funcionário não encontrado");
+        super("FUNCIONARIO_NAO_ENCONTRADO", "Funcionário não encontrado");
     }
 }

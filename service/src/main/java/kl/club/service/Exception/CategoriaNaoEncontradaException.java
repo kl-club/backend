@@ -1,7 +1,7 @@
 package kl.club.service.Exception;
 
-public class CategoriaNaoEncontradaException extends RuntimeException {
+public class CategoriaNaoEncontradaException extends NegocioException {
     public CategoriaNaoEncontradaException() {
-        super("Categoria não encontrada");
+        super("CATEGORIA_NAO_ENCONTRADA", "Categoria não encontrada");
     }
 }
