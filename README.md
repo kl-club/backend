@@ -43,6 +43,8 @@ No Windows, use `mvnw.cmd spring-boot:run`.
 
 A API sobe em `http://localhost:8080`, e o Swagger fica em `http://localhost:8080/swagger-ui.html`.
 
+O CORS (`Config/CorsConfig.java`) libera chamadas do navegador vindas de `http://localhost` em qualquer porta, para os frontends rodarem com o Vite (5173, ou 5174 quando dois sobem juntos).
+
 ### Outros comandos
 
 ```bash
@@ -173,11 +175,12 @@ O código fica em `service/src/main/java/kl/club/service/`:
 | `Model.Entity` | Entidades JPA |
 | `Model.enums` | Enums de domínio |
 | `Model.Mapper` | Conversão entre DTO e entidade |
-| `Config` | Configuração do Swagger |
+| `Config` | Configuração do Swagger e do CORS |
 
 ## Limitações atuais
 
 - As rotas não têm autenticação. O login de clientes e funcionários só confere os dados e não gera token.
+- O CORS só libera origens `http://localhost`. Um ambiente publicado precisa incluir a própria origem em `CorsConfig`.
 - As senhas de funcionários são gravadas em texto puro. Não use dados reais.
 - Não há integração de pagamentos: o status inicial do pedido depende só da forma de pagamento, e o cancelamento não faz estorno.
 - O dashboard só aceita o período `HOJE`.
