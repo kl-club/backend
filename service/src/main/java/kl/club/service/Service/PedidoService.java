@@ -49,6 +49,12 @@ public class PedidoService {
 
     private static final int TAMANHO_MAXIMO_PAGINA = 50;
 
+    /** Ordem de fila (mais antigos primeiro): colunas de novos, em preparo e prontos. */
+    private static final Sort ORDEM_FILA = Sort.by(Sort.Direction.ASC, "dataHora", "idPedido");
+
+    /** Mais recentes primeiro: coluna de concluídos e histórico. */
+    private static final Sort ORDEM_MAIS_RECENTES = Sort.by(Sort.Direction.DESC, "dataHora", "idPedido");
+
     private final PedidoRepository pedidoRepository;
     private final ProdutoRepository produtoRepository;
     private final UsuarioRepository usuarioRepository;
@@ -105,13 +111,26 @@ public class PedidoService {
         return PedidoMapper.toResponse(pedido);
     }
 
-    /** Lista da gestão: pedidos de hoje nos status informados, mais antigos primeiro. */
+    /** Lista da gestão em ordem de fila: pedidos de hoje nos status informados, mais antigos primeiro. */
     @Transactional(readOnly = true)
     public List<PedidoResponseDTO> listarDoDia(List<StatusPedido> status) {
+        return listarDoDia(status, ORDEM_FILA);
+    }
+
+    /**
+     * Coluna de concluídos da gestão: pedidos CONCLUIDO de hoje, mais recentes primeiro.
+     * Ordena pela data do pedido (não há data de conclusão no schema).
+     */
+    @Transactional(readOnly = true)
+    public List<PedidoResponseDTO> listarConcluidosDoDia() {
+        return listarDoDia(List.of(StatusPedido.CONCLUIDO), ORDEM_MAIS_RECENTES);
+    }
+
+    private List<PedidoResponseDTO> listarDoDia(List<StatusPedido> status, Sort ordem) {
 
         LocalDateTime inicioDoDia = LocalDate.now(FUSO).atStartOfDay();
 
-        return pedidoRepository.buscarPorStatusNoPeriodo(status, inicioDoDia, inicioDoDia.plusDays(1))
+        return pedidoRepository.buscarPorStatusNoPeriodo(status, inicioDoDia, inicioDoDia.plusDays(1), ordem)
                 .stream()
                 .map(PedidoMapper::toResponse)
                 .toList();
@@ -166,12 +185,11 @@ public class PedidoService {
 
         validarFiltroHistorico(filtro);
 
-        Sort maisRecentesPrimeiro = Sort.by(Sort.Direction.DESC, "dataHora", "idPedido");
-        Sort ordenacao = maisRecentesPrimeiro;
+        Sort ordenacao = ORDEM_MAIS_RECENTES;
 
         if (filtro.ordenarPor() != null) {
             Sort.Direction direcao = "asc".equals(filtro.direcao()) ? Sort.Direction.ASC : Sort.Direction.DESC;
-            ordenacao = Sort.by(direcao, "valorTotal").and(maisRecentesPrimeiro);
+            ordenacao = Sort.by(direcao, "valorTotal").and(ORDEM_MAIS_RECENTES);
         }
 
         String nomeUsuario = filtro.nomeUsuario() == null || filtro.nomeUsuario().isBlank()

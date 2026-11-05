@@ -1,0 +1,71 @@
+# KL Club: MySQL + backend + dashboard + totem
+# Uso (na pasta backend/): docker compose up -d --build
+# Os fronts precisam estar clonados ao lado do backend: ../frontend-dashboard e ../frontend-pedidos
+
+name: kl-club
+
+services:
+  mysql:
+    image: mysql:8.4
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: kl_club
+      MYSQL_USER: newuser
+      MYSQL_PASSWORD: "1234"
+      TZ: America/Sao_Paulo
+      # Sem isso o cliente mysql dos scripts de init usa latin1 e corrompe os acentos (Açaí -> AÃ§aÃ­)
+      LANG: C.UTF-8
+    ports:
+      - "3307:3306"   # 3307 no host para não conflitar com um MySQL local na 3306
+    volumes:
+      - mysql-data:/var/lib/mysql
+      # Rodam só na primeira subida (volume vazio), em ordem alfabética
+      - ./db/script.sql:/docker-entrypoint-initdb.d/01-script.sql:ro
+      - ./db/inserts_kl_club.sql:/docker-entrypoint-initdb.d/02-inserts.sql:ro
+    healthcheck:
+      # Usa TCP e consulta uma tabela do seed: só fica saudável depois que os scripts terminaram
+      test: ["CMD", "mysql", "-h127.0.0.1", "-unewuser", "-p1234", "-e", "SELECT 1 FROM kl_club.funcionario LIMIT 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 20s
+    restart: unless-stopped
+
+  backend:
+    build: ./service
+    environment:
+      DB_URL: jdbc:mysql://mysql:3306/kl_club?useSSL=false&serverTimezone=America/Sao_Paulo&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: newuser
+      SPRING_DATASOURCE_PASSWORD: "1234"
+      TZ: America/Sao_Paulo
+    ports:
+      - "8080:8080"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: unless-stopped
+
+  frontend-dashboard:
+    build:
+      context: ../frontend-dashboard/vite-project
+      args:
+        VITE_API_URL: http://localhost:8080
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+  frontend-pedidos:
+    build:
+      context: ../frontend-pedidos/vite-project
+      args:
+        VITE_API_URL: http://localhost:8080
+    ports:
+      - "5174:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  mysql-data:
