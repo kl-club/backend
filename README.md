@@ -23,10 +23,10 @@ O sistema cobre clientes (usuários), funcionários, categorias, produtos e pedi
 
 A aplicação usa `spring.jpa.hibernate.ddl-auto=validate`, ou seja, não cria as tabelas sozinha e não sobe se elas não existirem ou divergirem das entidades.
 
-1. Crie o banco `kl_club` com o script de criação (`script.sql`) e, se quiser dados de exemplo, rode depois o `inserts_kl_club.sql`. Os dois não ficam no repositório: peça a um integrante da equipe. Use a versão com o status `CANCELADO` em `pedido.status_pedido`; sem ele, o cancelamento de pedidos falha.
+1. Crie o banco `kl_club` com o script de criação (`db/script.sql`) e, se quiser dados de exemplo, rode depois o `db/inserts_kl_club.sql`.
 2. Crie um usuário no MySQL com as credenciais definidas em `service/src/main/resources/application.properties`.
 
-O `script.sql` começa com `DROP DATABASE`: rodá-lo de novo apaga todos os dados. O `inserts_kl_club.sql` cria pedidos com a data de hoje e de ontem, para o dashboard e a gestão não ficarem vazios. Nos dados de exemplo, todos os funcionários usam a senha `Senha@123`.
+O `script.sql` começa com `DROP DATABASE`: rodá-lo de novo apaga todos os dados. O `inserts_kl_club.sql` traz um recorte do cardápio da KD Lanches para demonstração (12 categorias e 21 produtos, 3 deles indisponíveis) e cria pedidos com a data de hoje e de ontem, para o dashboard e a gestão não ficarem vazios. Nos dados de exemplo, todos os funcionários usam a senha `Senha@123`.
 
 Para usar outro endereço de banco, defina a variável de ambiente `DB_URL`.
 
@@ -41,15 +41,55 @@ cd service
 
 No Windows, use `mvnw.cmd spring-boot:run`.
 
-A API sobe em `http://localhost:8080`, e o Swagger fica em `http://localhost:8080/swagger-ui.html`.
+A API sobe em `http://localhost:8080`, e o Swagger fica em `http://localhost:8080/swagger-ui.html`. Todas as rotas estão documentadas no Swagger, com as regras, os parâmetros, cada resposta possível (sucesso e erros, com o `codigo`) e exemplos iguais às respostas reais. Os DTOs mostram descrição e exemplo de cada campo.
 
-O CORS (`Config/CorsConfig.java`) libera chamadas do navegador vindas de `http://localhost` em qualquer porta, para os frontends rodarem com o Vite (5173, ou 5174 quando dois sobem juntos).
+O CORS (`Config/CorsConfig.java`) libera chamadas do navegador vindas de `http://localhost` em qualquer porta, para os frontends rodarem com o Vite (o dashboard na 5173 e o totem na 5174).
 
 ### Outros comandos
 
 ```bash
 ./mvnw clean test-compile   # compila o código e os testes, sem precisar de banco
 ./mvnw test                 # exige MySQL ativo com as tabelas criadas
+```
+
+### Rodando com Docker
+
+O `service/Dockerfile` gera a imagem da API em dois estágios: o Maven (`maven:3.9-eclipse-temurin-21`) compila o jar sem rodar os testes, e o runtime usa só o JRE (`eclipse-temurin:21-jre`), com `TZ=America/Sao_Paulo`.
+
+O jeito mais simples de subir tudo é o `docker-compose.yml` da raiz deste repositório, que sobe o MySQL, esta API, o `frontend-dashboard` e o `frontend-pedidos`.
+
+O compose constrói os fronts a partir de `../frontend-dashboard` e `../frontend-pedidos`. Clone os três repositórios lado a lado, com esses nomes exatos de pasta:
+
+```
+kl-club/
+├── backend/              # este repositório (docker-compose.yml)
+├── frontend-dashboard/
+└── frontend-pedidos/
+```
+
+```bash
+docker compose up -d --build   # na raiz deste repositório
+```
+
+| Serviço | Endereço no host |
+|---|---|
+| API | `http://localhost:8080` (Swagger em `/swagger-ui.html`) |
+| Dashboard | `http://localhost:5173` |
+| Totem | `http://localhost:5174/totem` |
+| MySQL | `localhost:3307` (usuário `newuser`, senha `1234`) |
+
+- O MySQL cria o banco com o `db/script.sql` e o `db/inserts_kl_club.sql`.
+- O MySQL roda num container próprio (`mysql:8.4`) e expõe a porta 3307, para não conflitar com um MySQL local na 3306. Os dados ficam no volume `kl-club_mysql-data`.
+- Os dois scripts rodam só na primeira subida, com o volume vazio, e os pedidos do seed ganham a data desse dia. Para recriar o banco com o seed, rode `docker compose down -v` e suba de novo.
+- A API só sobe depois que o MySQL termina os scripts (healthcheck). Ela recebe o banco pelas variáveis `DB_URL`, `SPRING_DATASOURCE_USERNAME` e `SPRING_DATASOURCE_PASSWORD`, sem mudar o `application.properties`.
+- Os fronts são servidos pelo nginx nas portas 5173 e 5174, então o CORS atual já os libera.
+
+Para rodar só a imagem da API, contra um MySQL fora do Docker:
+
+```bash
+cd service
+docker build -t kl-club-backend .
+docker run --rm -p 8080:8080 -e DB_URL="jdbc:mysql://host.docker.internal:3306/kl_club?useSSL=false&serverTimezone=America/Sao_Paulo&allowPublicKeyRetrieval=true" kl-club-backend
 ```
 
 ## Rotas
@@ -106,9 +146,9 @@ O CORS (`Config/CorsConfig.java`) libera chamadas do navegador vindas de `http:/
 | `POST` | `/pedidos` | Cria um pedido. Recebe só os itens (`idProduto` e `quantidade`) e os dados do pedido; preço, total, pontos, status e data são calculados pela API |
 | `GET` | `/pedidos/{id}` | Busca um pedido, com cliente e itens |
 | `GET` | `/pedidos/gestao/novos` | Pedidos de hoje em `PENDENTE` ou `PAGO`, mais antigos primeiro |
-| `GET` | `/pedidos/gestao/em-preparo` | Pedidos de hoje em `EM_PREPARO` |
-| `GET` | `/pedidos/gestao/prontos` | Pedidos de hoje em `PRONTO_PARA_RETIRADA` |
-| `GET` | `/pedidos/gestao/concluidos` | Pedidos de hoje em `CONCLUIDO` |
+| `GET` | `/pedidos/gestao/em-preparo` | Pedidos de hoje em `EM_PREPARO`, mais antigos primeiro |
+| `GET` | `/pedidos/gestao/prontos` | Pedidos de hoje em `PRONTO_PARA_RETIRADA`, mais antigos primeiro |
+| `GET` | `/pedidos/gestao/concluidos` | Pedidos de hoje em `CONCLUIDO`, mais recentes primeiro (pela hora do pedido) |
 | `PATCH` | `/pedidos/{id}/avancar` | Move o pedido para o próximo status |
 | `PATCH` | `/pedidos/{id}/cancelar` | Cancela um pedido `PENDENTE` ou `PAGO` |
 | `GET` | `/pedidos/historico` | Histórico paginado, com filtros opcionais por código, nome do cliente, datas e modalidade, e ordenação por valor |
@@ -175,7 +215,7 @@ O código fica em `service/src/main/java/kl/club/service/`:
 | `Model.Entity` | Entidades JPA |
 | `Model.enums` | Enums de domínio |
 | `Model.Mapper` | Conversão entre DTO e entidade |
-| `Config` | Configuração do Swagger e do CORS |
+| `Config` | Configuração do Swagger e do CORS, e os exemplos de erro do Swagger (`SwaggerExemplos`) |
 
 ## Limitações atuais
 
@@ -183,6 +223,7 @@ O código fica em `service/src/main/java/kl/club/service/`:
 - O CORS só libera origens `http://localhost`. Um ambiente publicado precisa incluir a própria origem em `CorsConfig`.
 - As senhas de funcionários são gravadas em texto puro. Não use dados reais.
 - Não há integração de pagamentos: o status inicial do pedido depende só da forma de pagamento, e o cancelamento não faz estorno.
+- O totem ainda não identifica o cliente: os pedidos dele vão sem `idUsuario` e não geram pontos.
 - O dashboard só aceita o período `HOJE`.
 - Três erros de `/usuarios` não passam pelo tratamento padrão e saem sem `codigo`: "Informe um CPF ou telefone", "Informe pelo menos um campo para atualização" e "Pedido não encontrado para este usuário".
 - O único teste automatizado é o `contextLoads`.

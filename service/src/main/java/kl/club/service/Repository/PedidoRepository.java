@@ -7,6 +7,7 @@ import kl.club.service.Model.enums.StatusPedido;
 import jakarta.persistence.LockModeType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
@@ -99,7 +100,7 @@ public interface PedidoRepository extends JpaRepository<Pedido, Integer> {
         """)
     Optional<Pedido> buscarPorIdComItens(@Param("id") Integer id);
 
-    // Listas da gestão: pedidos do período nos status pedidos, em ordem de fila (mais antigos primeiro)
+    // Listas da gestão: pedidos do período nos status pedidos. A ordem vem do Sort (fila ou mais recentes primeiro)
     @Query("""
         SELECT DISTINCT p
         FROM Pedido p
@@ -110,12 +111,12 @@ public interface PedidoRepository extends JpaRepository<Pedido, Integer> {
         WHERE p.statusPedido IN :status
         AND p.dataHora >= :inicio
         AND p.dataHora < :fim
-        ORDER BY p.dataHora ASC, p.idPedido ASC
         """)
     List<Pedido> buscarPorStatusNoPeriodo(
             @Param("status") List<StatusPedido> status,
             @Param("inicio") LocalDateTime inicio,
-            @Param("fim") LocalDateTime fim
+            @Param("fim") LocalDateTime fim,
+            Sort ordem
     );
 
     /*
